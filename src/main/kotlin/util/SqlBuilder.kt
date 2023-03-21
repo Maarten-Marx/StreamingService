@@ -8,7 +8,13 @@ class SqlBuilder {
     fun append(@Language("SQL") line: String) = lines.add(line)
 
     fun result() = lines.fold("") { res, line ->
-        val postfix = if (line.endsWith(";")) "\n\n" else "\n\t"
+        val postfix = when {
+            line.endsWith(";")
+                    || line.startsWith("--")
+                    || line.startsWith("#") -> "\n\n"
+
+            else -> "\n\t"
+        }
         res + line + postfix
     }.trim()
 }

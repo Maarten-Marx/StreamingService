@@ -36,6 +36,8 @@ suspend fun main() {
 
     val builder = SqlBuilder()
 
+    builder.append("-- Generated using: https://github.com/Maarten-Marx/StreamingService")
+
     for (table in listOf(
         "albumsong", "bookmark", "follower", "playlistsong", "songartist",
         "album", "artist", "playlist", "song", "user"
