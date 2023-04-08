@@ -32,7 +32,7 @@ suspend fun getSongStatement(songCount: Int): String {
             val date = LocalDate.now()
                 .minusDays(100 + Random.nextLong(100L))
 
-            "('$title', ${Random.nextInt(90..300)}, '$date', '$lyrics')"
+            "('$title', ${Random.nextInt(90..300)}, '$date', ${if (lyrics != null) "'$lyrics'" else "null"})"
         } + ";")
     }
 }
