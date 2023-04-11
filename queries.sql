@@ -38,3 +38,53 @@ where year(releaseDate) = 2022
 select concat(name, ': ', description) as 'playlist info'
 from playlist
 where public;
+
+/*
+ * JOINS
+ */
+
+/*
+ * Get the titles of all songs on album 11.
+ */
+
+select title
+from albumsong
+    left join song on albumsong.songID = song.songID
+where albumID = 11;
+
+/*
+ * Get the name of each playlist, along with the name of its owner.
+ */
+
+select playlist.name, user.name as 'owner'
+from playlist
+    left join user on user.userID = playlist.ownerID;
+
+/*
+ * Get the titles of all songs in playlist 5, each alongside the name of the playlist.
+ */
+
+select playlist.name as 'playlist name', song.title as 'song title'
+from playlistsong
+    left join playlist on playlistsong.playlistID = playlist.playlistID
+    left join song on playlistsong.songID = song.songID
+where playlistsong.playlistID = 5;
+
+/*
+ * Get the titles of all songs bookmarked by user 6 or 7
+ */
+
+select distinct song.title
+from bookmark
+    left join song on bookmark.songID = song.songID
+where userID in (6, 7);
+
+/*
+ * Get the ID and title of each song released by at least one verified artist.
+ */
+
+select distinct song.songID, song.title
+from songartist
+    left join artist on songartist.artistID = artist.artistID
+    left join song on songartist.songID = song.songID
+where artist.verified;
