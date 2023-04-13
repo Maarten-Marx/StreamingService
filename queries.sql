@@ -143,3 +143,78 @@ select songID, title
 from song
 where songID not in (select songID
                      from playlistsong);
+
+/*
+ * SET FUNCTIONS
+ */
+
+/*
+ * Get the total playtime of artist 10's discography
+ */
+
+select sum(length) as 'total length'
+from songartist
+    left join song on songartist.songID = song.songID
+where songartist.artistID = 10;
+
+/*
+ * Get the title and length of the longest song(s)
+ */
+
+select title, length
+from song
+where length = (select max(length)
+                from song);
+
+/*
+ * Get the average length of all song titles, in characters, rounded up.
+ */
+
+select ceil(avg(length(title))) as 'average title length'
+from song;
+
+/*
+ * CORRELATED SUB-QUERIES
+ */
+
+/*
+ * For each user, get their name and the amount of bookmarks they have.
+ */
+
+select name,
+       (select count(*)
+        from bookmark
+        where bookmark.userID = user.userID) as 'bookmark count'
+from user;
+
+/*
+ * For each artist, get their name and their follower count.
+ */
+
+select name,
+       (select count(*)
+        from follower
+        where follower.artistID = artist.artistID) as 'follower count'
+from artist;
+
+/*
+ * For each artist, get their ID and the total length of their discography, ordered by ID.
+ */
+
+select artistID,
+       (select sum(length)
+        from songartist
+            left join song on songartist.songID = song.songID
+        where songartist.artistID = artist.artistID) as 'total length'
+from artist
+order by artistID;
+
+/*
+ * Get the name of each artist with 5 or more songs.
+ */
+
+select name
+from artist
+where (select count(*)
+       from songartist
+       where songartist.artistID = artist.artistID) >= 5;
