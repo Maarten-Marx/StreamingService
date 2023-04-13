@@ -88,3 +88,58 @@ from songartist
     left join artist on songartist.artistID = artist.artistID
     left join song on songartist.songID = song.songID
 where artist.verified;
+
+/*
+ * BASIC SUB-QUERIES
+ */
+
+/*
+ * Get the names of all users that own a playlist.
+ */
+
+select name
+from user
+where userID in (select ownerID
+                 from playlist);
+
+/*
+ * Get the titles of all songs in playlist 5, in order, without using joins.
+ */
+
+select title
+from song
+where songID in (select songID
+                 from playlistsong
+                 where playlistID = 5
+                 order by songIndex);
+
+/*
+ * Get the names of all artists featured on album 19, without using joins.
+ */
+
+select name
+from artist
+where artistID in (select artistID
+                   from songartist
+                   where songID in (select songID
+                                    from albumsong
+                                    where albumID = 19));
+
+/*
+ * Get the names of all artists that user 1 follows, without using joins.
+ */
+
+select name
+from artist
+where artistID in (select artistID
+                   from follower
+                   where followerID = 1);
+
+/*
+ * Get the ID and title of any song not featured in any playlists.
+ */
+
+select songID, title
+from song
+where songID not in (select songID
+                     from playlistsong);
