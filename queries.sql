@@ -218,3 +218,46 @@ from artist
 where (select count(*)
        from songartist
        where songartist.artistID = artist.artistID) >= 5;
+
+/*
+ * GROUP BY
+ */
+
+/*
+ * For each artist, get their ID, their name, and the total length of their discography, without using sub-queries.
+ */
+
+select artist.artistID, name, sum(length) as 'total length'
+from artist
+    left join songartist on artist.artistID = songartist.artistID
+    left join song on songartist.songID = song.songID
+group by artist.artistID, name;
+
+/*
+ * Sort all artists by the number of songs they're credited on, in descending order. Show the artist name and the number of songs.
+ */
+
+select name, count(songID) as 'Number of songs'
+from artist
+    left join songartist on artist.artistID = songartist.artistID
+group by name
+order by 2 desc;
+
+/*
+ * Get the name of any user that follows 5 or more artists. Also show the number of artists that user follows.
+ */
+
+select name, count(artistID)
+from user
+    left join follower on user.userID = follower.followerID
+group by name
+having count(artistID) >= 5;
+
+/*
+ * Get the number of songs released in each month. Also show the name of the month. Order the months chronologically.
+ */
+
+select monthname(releaseDate) as 'Month', count(*) 'Number of songs'
+from song
+group by monthname(releaseDate), month(releaseDate)
+order by month(releaseDate);
